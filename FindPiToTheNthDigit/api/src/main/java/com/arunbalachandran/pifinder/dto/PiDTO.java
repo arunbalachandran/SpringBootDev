@@ -10,12 +10,12 @@ public class PiDTO {
 
     public PiDTO() {}
 
+    // TODO: add checks
     public void setPrecision(String precision) {
         this.precision = precision;
     }
    
-    // maybe this should return precision? why?
-    public String getPrecision() {
-        return this.precision;
+    public int getPrecision() {
+        return Integer.parseInt(this.precision);
     }
 }
