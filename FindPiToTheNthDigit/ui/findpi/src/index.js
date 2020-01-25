@@ -1,40 +1,42 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDom from 'react-dom';
 
-class Picalc extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      piprecision: 0,
-      response: 3.14
+class Piform extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { precision: '' };
     }
-  }
 
-  handleChange(e) {
-    console.log("change detected");
-    this.setState({piprecision: e.target.value});
-  }
+    customSubmitHander = async (event) => {
+        event.preventDefault();
+        console.log("Precision is " + this.state.precision);
+        const response = await fetch("http://localhost:8080/", {
+            method: 'POST',
+            body: JSON.stringify({"precision": this.state.precision}),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        // Note: if you parse the response as a string: you'll run into javascript's floating point limitation
+        //       so, fix this by converting the response to text and then parsing out the value 
+        const jsonResponse = await response.text();
+        // alert("You are submitting: " + this.state.precision);
+        console.log("Response is " + jsonResponse);
+    }
 
-  handleClick() {
-    console.log("Input passed in was : " + this.state.piprecision);
-    fetch('http://localhost:8080')
-    .then(response => {
-      console.log("Response is : " + response);
-      // this.setState("pi", response)
-    })
-  }
+    customChangeHandler = (event) => {
+        this.setState({precision: event.target.value});
+    }
 
-  render() {
-    return (
-      <div className="Picalc">
-        <input type="text" onChange={ (e) => this.handleChange(e) } />
-        <input type="button" value="Pi Precision in digits" onClick={ () => this.handleClick() } />
-      </div>
-    );
-  }
+    render() {
+        return (
+            <form onSubmit={this.customSubmitHander}>
+                <h1>Please enter the precision you want to calculate Pi for :</h1>
+                <input type="text" onChange={this.customChangeHandler} />
+                <input type="submit" />
+            </form>
+        )
+    }
 }
 
-ReactDOM.render(
-  <Picalc />,
-  document.getElementById('root')
-);
+ReactDom.render(<Piform />, document.getElementById('root'));
