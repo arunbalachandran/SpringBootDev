@@ -1,0 +1,14 @@
+syntax = "proto2";
+
+package loginapi;
+
+// which package this lives in
+option java_package = "com.arunbalachandran.loginapi";
+// which class name should contain all classes of this file
+option java_outer_classname = "UserProtos";
+
+message User {
+    required string name = 1;
+    required string email = 3;
+
+}
